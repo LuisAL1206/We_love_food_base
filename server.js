@@ -41,7 +41,7 @@ app.post('/create/food', (req, res) => {
 
     app.get('/all/food',(req,res)=>{
         Comida.find().populate().exec()
-        .then(comida => res.send(comida))
+        .then(comidas => res.send(comidas))
         .catch(err => res.status(409).send(err));
     });
     newFood.save((err, documentoComida) => {
