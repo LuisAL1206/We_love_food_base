@@ -24,6 +24,13 @@ app.get('/all/food', (req, res) => {
         .catch(err => res.status(409).send(err));
 });
 
+app.delete('/delete/food:id',(req,res)=>{
+    const { id } = req.params;
+    Comida.findByIdAndDelete(id).exec()
+    .then(comida => res.status(200).send({message:'Se ha borrado exitosamente',comida:comida}) )
+    .catch(error => res.status(409).send({message:'No se ha podido borrar el platillo',error:error}))
+});
+
 app.post('/create/food', (req, res) => {
     const {
         platillo,
