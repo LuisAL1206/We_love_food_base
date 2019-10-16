@@ -18,6 +18,12 @@ app.get('/food', (request, response) => {
     response.send({ message: 'Server on' })
 })
 
+app.get('/all/food', (req, res) => {
+    Comida.find().populate().exec()
+        .then(comidas => res.send(comidas))
+        .catch(err => res.status(409).send(err));
+});
+
 app.post('/create/food', (req, res) => {
     const {
         platillo,
@@ -39,17 +45,14 @@ app.post('/create/food', (req, res) => {
         descripcion,
     });
 
-    app.get('/all/food',(req,res)=>{
-        Comida.find().exec()
-        .then(comidas => res.send(comidas))
-        .catch(err => res.status(409).send(err));
-    });
+    
     newFood.save((err, documentoComida) => {
         err
             ? res.status(400).send(err)
             : res.status(201).send({ message: 'Has publicado un nuevo Antojito', comida: documentoComida })
-    })
+    });
 });
+
 
 
 app.listen(PORT, () => {
