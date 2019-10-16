@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 const PORT = process.env.PORT || 4000;
 
 app.get('/food', (request, response) => {
-   
+
     response.send({ message: 'Server on' })
 })
 
@@ -39,6 +39,11 @@ app.post('/create/food', (req, res) => {
         descripcion,
     });
 
+    app.get('/all/food',(req,res)=>{
+        Comida.find().populate().exec()
+        .then(comida => res.send(comida))
+        .catch(err => res.status(409).send(err));
+    });
     newFood.save((err, documentoComida) => {
         err
             ? res.status(400).send(err)
