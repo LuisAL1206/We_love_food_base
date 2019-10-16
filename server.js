@@ -1,17 +1,20 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors')
 
 const { Comida } = require('./comida')
 console.log(Comida)
 
 const app = express();
 
+app.use(cors())
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-const PORT = 4005;
+const PORT = process.env.PORT || 4000;
 
-app.get('/', (request, response) => {
+app.get('/food', (request, response) => {
+   
     response.send({ message: 'Server on' })
 })
 
