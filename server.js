@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors')
 
-const { Comida } = require('./comida')
+const { Comida, items } = require('./comida')
 console.log(Comida)
 
 const app = express();
@@ -24,12 +24,20 @@ app.get('/all/food', (req, res) => {
         .catch(err => res.status(409).send(err));
 });
 
-app.delete('/delete/food:id',(req,res)=>{
+app.delete('/delete/food:id', (req, res) => {
     const { id } = req.params;
     Comida.findByIdAndDelete(id).exec()
-    .then(comida => res.status(200).send({message:'Se ha borrado exitosamente',comida:comida}) )
-    .catch(error => res.status(409).send({message:'No se ha podido borrar el platillo',error:error}))
+        .then(comida => res.status(200).send({ message: 'Se ha borrado exitosamente', comida: comida }))
+        .catch(error => res.status(409).send({ message: 'No se ha podido borrar el platillo', error: error }))
 });
+
+app.put('/update/:id', (req, res) => {
+    const { id } = req.params;
+    Comida.findByIdAndUpdate(id, {$set:req.body },{ new: true }).exec()
+        .then(comida => res.status(200).send({ message: 'Se ha actualizado exitosamente', comida: comida }))
+        .catch(error => res.status(409).send({ message: 'No se ha podido actualizar el platillo', error: error }))
+});
+
 
 app.post('/create/food', (req, res) => {
     const {
@@ -40,6 +48,7 @@ app.post('/create/food', (req, res) => {
         restaurante,
         img_platillo,
         descripcion,
+        carrito,
     } = req.body
 
     const newFood = Comida({
@@ -50,9 +59,10 @@ app.post('/create/food', (req, res) => {
         restaurante,
         img_platillo,
         descripcion,
+        carrito,
     });
 
-    
+
     newFood.save((err, documentoComida) => {
         err
             ? res.status(400).send(err)
@@ -60,6 +70,27 @@ app.post('/create/food', (req, res) => {
     });
 });
 
+
+//carrito
+
+app.post('/carrito', (req, res) => {
+    const {
+        Nombre,
+        addProducts,
+        Total
+    } = req.body
+
+    const newCar = items({
+        Nombre,
+        addProducts,
+        Total
+    });
+    newCar.save((err, carrito) => {
+        err
+            ? res.status(400).send(err)
+            : res.status(201).send({ message: 'Has publicado un nuevo carrito de compras', carrito: carrito })
+    })
+});
 
 
 app.listen(PORT, () => {

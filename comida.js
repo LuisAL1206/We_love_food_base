@@ -25,11 +25,33 @@ const foodSchema = new Schema({
     restaurante: String,
     img_platillo: String,
     descripcion: String,
+    carrito: [
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref: 'Users'
+        }
+    ]
 
 }, { timestamps: true });
 
+const itemsSchema = new Schema ({
+    Nombre: String,
+    addProducts: [],
+    Total: Number
+
+})
+
+const carritoSchema = new Schema ({
+    
+}, {timestamps:true})
+
+
 const Comida = mongoose.model('Comida', foodSchema);
+const Carrito = mongoose.model('carrito', carritoSchema);
+const items = mongoose.model('items', itemsSchema)
 
 module.exports = {
-    Comida
+    Comida,
+    Carrito,
+    items
 }
